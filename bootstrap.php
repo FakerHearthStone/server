@@ -21,3 +21,7 @@ $container['log'] = function($c){
     $log->pushHandler(new StreamHandler(fopen('php://output', 'w'), Logger::INFO));
     return $log;
 };
+
+$container['redis'] = function($c){
+    return new \Predis\Client($c['config']['redis']);
+};

@@ -4,6 +4,10 @@ return [
     'common' => [
         'debug' => true,
     ],
+    'redis' => [
+        'host' => '192.168.10.10',
+        'port' => 6379,
+    ],
     'server' => [
         'server_type' => 'websocket',
         'websocket' => [

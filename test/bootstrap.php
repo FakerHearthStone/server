@@ -17,7 +17,7 @@ $container = ContainerBuilder::getInstance();
 if( MODE == 'prod' || MODE == 'test' ){
     $configArr = require_once CONFIG_PATH . DS . MODE . '/config.php';
 }else{
-    $configArr = require_once CONFIG_PATH . DS . 'config/config.php';
+    $configArr = require_once CONFIG_PATH . DS . '/config.php';
 }
 
 $container['config'] = $configArr;
@@ -27,3 +27,7 @@ $log = new Logger('log');
 $log->pushHandler(new StreamHandler(ROOT_PATH . DS . 'data' . DS . 'log' . DS . date('Y-m-d') . '.log', Logger::INFO));
 
 $container['log'] = $log;
+
+/***********************redis******************************/
+$redis = new \Predis\Client($container['config']['redis']);
+$container['redis'] = $redis;

@@ -3,13 +3,15 @@
 namespace HearthStone\commands;
 
 
+use HearthStone\models\Account;
+
 class DoLoginCommand extends BaseCommand
 {
     private $user;
     
     public function handler($request)
     {
-        $this->user = [];
+        $this->user = Account::model()->getAccountInfo($request->params->loginName, $request->params->password);
 
         if( $this->user ){
             $this->data['user'] = $this->user;
