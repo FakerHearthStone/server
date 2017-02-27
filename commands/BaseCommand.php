@@ -14,6 +14,7 @@ const STATUS_SUCCESS       = 0;
 const STATUS_INVALID_CMD   = 1;
 const STATUS_NOT_FOUND_CMD = 2;
 const STATUS_NOT_FOUND_USER = 10000;
+const STATUS_PLS_LOGIN = 10001;
 
 abstract class BaseCommand
 {

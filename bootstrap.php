@@ -25,3 +25,7 @@ $container['log'] = function($c){
 $container['redis'] = function($c){
     return new \Predis\Client($c['config']['redis']);
 };
+
+$container['server'] = function($c){
+    return (new \HearthStone\services\ServerFactory())->create();
+};
