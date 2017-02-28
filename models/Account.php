@@ -45,7 +45,8 @@ class Account extends BasicModel
     {
         if( ! $this->checkAccountExists($account['accountName']) ){
             $this->redis->hmset("account:{$account['accountName']}", $account);
-            
+
+            $this->redis->set("usercards:{$account['accountName']}", json_encode(CardHelper::model()->getInitCards()));
             return true;
         }
         
