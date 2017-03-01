@@ -166,4 +166,13 @@ class Card extends BasicModel
 
         return true;
     }
+    
+    public function isHero()
+    {
+        if( $this->type == 'HERO' ){
+            return true;
+        }
+        
+        return false;
+    }
 }

@@ -70,7 +70,8 @@ class CardHelper extends BasicModel
                 $card->needCost($filter->getCost()) &&
                 $card->matchSearchText($filter->getSearchText()) &&
                 $card->isGold($filter->isOnlyGold()) &&
-                $card->isCollectible($filter->isCollectible());
+                $card->isCollectible($filter->isCollectible()) && 
+                ! $card->isHero();
         });
     }
 
