@@ -95,6 +95,14 @@ class Card extends BasicModel
      */
     public function playerClassIn($playerClass = [])
     {
+        if( is_array($playerClass) ){
+            foreach ($playerClass as &$cls){
+                if( is_int($cls) ){
+                    $cls = (new CardClass())->getCardClassCode($cls, true);
+                }
+            }
+        }
+
         if( empty($playerClass) ){
             return true;
         }elseif( $playerClass != null && isset($this->playerClass) && ! in_array($this->playerClass, $playerClass) ){

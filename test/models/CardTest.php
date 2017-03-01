@@ -1,6 +1,7 @@
 <?php
 
 use HearthStone\models\CardHelper;
+use HearthStone\models\CardClass;
 use HearthStone\services\ContainerBuilder;
 
 class CardTest extends PHPUnit_Framework_TestCase
@@ -29,11 +30,13 @@ class CardTest extends PHPUnit_Framework_TestCase
     {
         return [
             ['AT_132', ['NEUTRAL'], true],
-            ['AT_132', [], false],
-            ['AT_132', false, false],
-            ['AT_132', null, false],
+            ['AT_132', [CardClass::NEUTRAL], true],
+            ['AT_132', [], true],
+            ['AT_132', false, true],
+            ['AT_132', null, true],
             ['CS2_039', ['NEUTRAL'], false],
             ['CS2_039', ['SHAMAN'], true],
+            ['CS2_039', [CardClass::SHAMAN], true],
             ['CS2_039', ['NEUTRAL', 'SHAMAN'], true],
             ['EX1_295', ['MAGE'], true]
         ];
