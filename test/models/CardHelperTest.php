@@ -2,6 +2,7 @@
 
 
 use HearthStone\models\CardHelper;
+use HearthStone\models\CardFilter;
 use HearthStone\services\ContainerBuilder;
 
 class CardHelperTest extends PHPUnit_Framework_TestCase
@@ -16,14 +17,14 @@ class CardHelperTest extends PHPUnit_Framework_TestCase
     public function searchProvider()
     {
         return [
-            [null, null, null, '', false, true,],
-            [['CORE'], null, null, '', false, true,],
-            [['CORE'], ['NEUTRAL'], null, '', false, true,],
-            [['CORE'], ['SHAMAN'], null, '', false, true,],
-            [['CORE'], ['NEUTRAL', 'SHAMAN'], null, '', false, true,],
-            [['CORE'], ['NEUTRAL', 'SHAMAN'], 1, '', false, true,],
-            [['CORE'], ['NEUTRAL', 'SHAMAN'], null, '风', false, true,],
-            [['EXPERT1'], null, null, '', false, true,],
+            [ new CardFilter(null, null, null, '', false, true) ],
+            [ new CardFilter(['CORE'], null, null, '', false, true) ],
+            [ new CardFilter(['CORE'], ['NEUTRAL'], null, '', false, true) ],
+            [ new CardFilter(['CORE'], ['SHAMAN'], null, '', false, true) ],
+            [ new CardFilter(['CORE'], ['NEUTRAL', 'SHAMAN'], null, '', false, true) ],
+            [ new CardFilter(['CORE'], ['NEUTRAL', 'SHAMAN'], 1, '', false, true) ],
+            [ new CardFilter(['CORE'], ['NEUTRAL', 'SHAMAN'], null, '风', false, true) ],
+            [ new CardFilter(['EXPERT1'], null, null, '', false, true) ],
         ];
     }
 
@@ -36,11 +37,12 @@ class CardHelperTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param CardFilter $filter
      * @dataProvider searchProvider
      */
-    public function testSearch($set, $playerClass, $cost, $searchText, $onlyGold, $collectible)
+    public function testSearch($filter)
     {
-        $cards = CardHelper::model()->search($set, $playerClass, $cost, $searchText, $onlyGold, $collectible);
+        $cards = CardHelper::model()->search($filter);
         $this->assertNotEmpty($cards);
     }
 

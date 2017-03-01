@@ -57,32 +57,27 @@ class CardHelper extends BasicModel
     /**
      * 根据条件搜索卡牌
      *
-     * @param array  $set 卡牌所属集合
-     * @param array   $playerClass 职业
-     * @param null|int   $cost 法力
-     * @param string $searchText 搜索文本
-     * @param bool   $onlyGold 只搜索金卡
-     * @param bool   $collectible 是否可制作
+     * @param CardFilter $filter
      *
      * @return mixed
      */
-    public function search($set = [], $playerClass = [], $cost = null, $searchText = '', $onlyGold = false, $collectible = true){
+    public function search(CardFilter $filter){
         //只要不满足某个条件就返回false,否则返回true
-        return array_filter($this->cardArr, function(Card $card) use($set, $playerClass, $cost, $searchText, $onlyGold, $collectible){
+        return array_filter($this->cardArr, function(Card $card) use ($filter) {
             return
-                $card->inSet($set) &&
-                $card->playerClassIn($playerClass) &&
-                $card->needCost($cost) &&
-                $card->matchSearchText($searchText) &&
-                $card->isGold($onlyGold) &&
-                $card->isCollectible($collectible);
+                $card->inSet($filter->getSet()) &&
+                $card->playerClassIn($filter->getPlayerClass()) &&
+                $card->needCost($filter->getCost()) &&
+                $card->matchSearchText($filter->getSearchText()) &&
+                $card->isGold($filter->isOnlyGold()) &&
+                $card->isCollectible($filter->isCollectible());
         });
     }
 
     public function getInitCards()
     {
         $userCards = [];
-        $coreCards = $this->search(['CORE']);
+        $coreCards = $this->search(new CardFilter(['CORE']));
 
         foreach ($coreCards as $card){
             $userCards[] = [
