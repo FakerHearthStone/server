@@ -6,6 +6,7 @@ namespace HearthStone\models;
 class CardHelper extends BasicModel
 {
     private $cardArr = [];
+    public static $coreSet = ['CORE'];
     public static $crazySet = ['NAXX', 'GVG', 'REWARD'];
     public static $standSet = ['CORE', 'EXPERT1', 'BRM', 'TGT', 'LOE', 'OG', 'KARA', 'GANGS'];
 
@@ -50,6 +51,10 @@ class CardHelper extends BasicModel
         $finds = array_filter($this->cardArr, function($card) use($id){
             return $card->id == $id;
         });
+
+        if( empty($finds) ){
+            throw new \Exception("没有找到卡牌");
+        }
 
         return $finds[array_keys($finds)[0]];
     }
