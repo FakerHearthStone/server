@@ -19,53 +19,79 @@ class CardClass
     const WARLOCK = 9;
     const WARRIOR = 10;
 
-    public function getNormalCardClass($cls = null, $withNeutral = false)
+    private $cardClassVal;
+
+    private $code;
+
+    private $name;
+
+    /**
+     * @return int
+     */
+    public function getCardClassVal()
     {
-        $names = [
-            self::DRUID => '德鲁伊',
-            self::HUNTER => '猎人',
-            self::MAGE => '法师',
-            self::PALADIN => '圣骑士',
-            self::PRIEST => '牧师',
-            self::ROGUE => '盗贼',
-            self::SHAMAN => '萨满',
-            self::WARLOCK => '术士',
-            self::WARRIOR => '战士',
-        ];
+        return $this->cardClassVal;
+    }
 
-        if( $withNeutral ){
-            $names[self::NEUTRAL] = '中立';
-        }
+    /**
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
 
-        if( $cls ){
-            return $names[$cls];
-        }else{
-            return $names;
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function __construct($val)
+    {
+        $this->cardClassVal = $val;
+
+        $cardClassData = self::getAllCardClass()[$val];
+        $this->name = $cardClassData['name'];
+        $this->code = $cardClassData['code'];
+    }
+
+    /**
+     * @param $code string
+     *
+     * @return mixed|null
+     */
+    public static function getCardClassByCode($code)
+    {
+        foreach (self::getAllCardClass() as $cardClsVal => $cardClsArr){
+            if( $cardClsArr['code'] == $code ){
+                return $cardClsArr;
+            }
         }
+        
+        return null;
     }
     
-    public function getCardClassCode($cls = null, $withNeutral = false)
+    public static function getAllCardClass($withNeutral = true)
     {
-        $codes = [
-            self::DRUID => 'DRUID',
-            self::HUNTER => 'HUNTER',
-            self::MAGE => 'MAGE',
-            self::PALADIN => 'PALADIN',
-            self::PRIEST => 'PRIEST',
-            self::ROGUE => 'ROGUE',
-            self::SHAMAN => 'SHAMAN',
-            self::WARLOCK => 'WARLOCK',
-            self::WARRIOR => 'WARRIOR',
+        $all = [
+            self::DRUID => ['name' => '德鲁伊', 'code' => 'DRUID'],
+            self::HUNTER => ['name' => '猎人', 'code' => 'HUNTER'],
+            self::MAGE => ['name' => '法师', 'code' => 'MAGE'],
+            self::PALADIN => ['name' => '圣骑士', 'code' => 'PALADIN'],
+            self::PRIEST => ['name' => '牧师', 'code' => 'PRIEST'],
+            self::ROGUE => ['name' => '盗贼', 'code' => 'ROGUE'],
+            self::SHAMAN => ['name' => '萨满', 'code' => 'SHAMAN'],
+            self::WARLOCK => ['name' => '术士', 'code' => 'WARLOCK'],
+            self::WARRIOR => ['name' => '战士', 'code' => 'WARRIOR'],
         ];
-        
+
         if( $withNeutral ){
-            $codes[self::NEUTRAL] = 'NEUTRAL';
+            $all[self::NEUTRAL] = ['name' => '中立', 'code' => 'NEUTRAL'];
         }
-        
-        if( $cls ){
-            return $codes[$cls];
-        }else{
-            return $codes;
-        }
+
+        return $all;
     }
 }
