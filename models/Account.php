@@ -3,6 +3,8 @@
 namespace HearthStone\models;
 
 
+use HearthStone\services\userCardSetProvider\DefaultUserCardSetProvider;
+
 class Account extends BasicModel
 {
     private $fields = [
@@ -44,9 +46,18 @@ class Account extends BasicModel
     public function register($account)
     {
         if( ! $this->checkAccountExists($account['accountName']) ){
+            //设置账号信息
             $this->redis->hmset("account:{$account['accountName']}", $account);
 
+            //设置账号初始卡牌
             $this->redis->set("usercards:{$account['accountName']}", json_encode(CardHelper::model()->getInitCards()));
+
+            //设置用户初始套牌
+            foreach( CardClass::getAllCardClass(false) as $cardClassVal => $cardClassArr ){
+                $defaultCardSet = (new DefaultUserCardSetProvider($cardClassVal))->getUserCardSet();
+                $this->redis->set("usercardset:{$account['accountName']}:" . md5($defaultCardSet->getName()),
+                    json_encode($defaultCardSet->getUserCardSetArr()));
+            }
             return true;
         }
         
@@ -83,7 +94,7 @@ class Account extends BasicModel
                 'token'         => $token,
             ]);
 
-            $this->redis->set("tokens:$token", $this->accountName);
+            $this->redis->set("tokens:$token", $accountName);
 
             return $this->getAccountInfo($accountName);
         }
