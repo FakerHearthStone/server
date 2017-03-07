@@ -46,6 +46,12 @@ class Account extends BasicModel
     public function register($account)
     {
         if( ! $this->checkAccountExists($account['accountName']) ){
+            if( empty($account) ){
+                return false;
+            }
+
+            $account['roleInfo'] = json_encode($this->getRoleInfo());
+            
             //设置账号信息
             $this->redis->hmset("account:{$account['accountName']}", $account);
 
@@ -112,5 +118,12 @@ class Account extends BasicModel
     public function checkToken($token)
     {
         return $this->redis->get("tokens:$token");
+    }
+
+    private function getRoleInfo()
+    {
+        $roles = array_keys(CardClass::getAllCardClass(false));
+
+        return array_fill_keys($roles, ['level' => 0, 'numOfWins' => 0]);
     }
 }
