@@ -12,13 +12,19 @@ class DoLoginCommand extends BaseCommand
      */
     private $user;
     
-    public function handler($request)
+    public function handler($server, $frame)
     {
-        //用户存在并且密码验证成功,则更新登录信息(登录时间,token)
-        $this->user = (new Account())->getAccountInfo($request->params->loginName);
+        $receivedData = json_decode($frame->data);
 
-        if( $this->user && $this->user->validPassword($request->params->password) ){
-            $this->user = $this->user->updateLoginInfo($request->params->loginName);
+        //用户存在并且密码验证成功,则更新登录信息(登录时间,token)
+        $this->user = (new Account())->getAccountInfo($receivedData->params->loginName);
+
+        if( $this->user && $this->user->validPassword($receivedData->params->password) ){
+            $this->user = $this->user->updateLoginInfo($receivedData->params->loginName);
+
+            if( $this->user->getToken() ){
+                $this->clients->offsetSet($this->user->getToken(), $frame->fd);
+            }
             
             $this->data['user'] = $this->user;
             //TODO: 后续需要补充用户信息

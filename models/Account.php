@@ -115,6 +115,11 @@ class Account extends BasicModel
         return $str;
     }
     
+    public function getToken()
+    {
+        return $this->token;
+    }
+    
     public function checkToken($token)
     {
         return $this->redis->get("tokens:$token");

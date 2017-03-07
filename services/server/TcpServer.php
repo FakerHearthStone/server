@@ -66,7 +66,8 @@ class TcpServer extends \Swoole\Server
             $pushData = new \HearthStone\commands\InvalidCommand();
         }else{
             if( AccessControl::checkLogin($receivedData) ){
-                $pushData = \HearthStone\commands\CommandFactory::create($receivedData->cmd)->handler($receivedData);
+                //TODO: TcpServer 暂时无法使用下面的代码
+                $pushData = \HearthStone\commands\CommandFactory::create($receivedData->cmd)->handler($serv, $data);
             }else{
                 $pushData = new \HearthStone\commands\NoticeLoginCommand();
             }

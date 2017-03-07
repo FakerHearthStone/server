@@ -58,7 +58,7 @@ class WebSocket extends \Swoole\Websocket\Server
             $pushData = new \HearthStone\commands\InvalidCommand();
         }else{
             if( AccessControl::checkLogin($receivedData) ){
-                $pushData = \HearthStone\commands\CommandFactory::create($receivedData->cmd)->handler($receivedData);
+                $pushData = \HearthStone\commands\CommandFactory::create($receivedData->cmd)->handler($server, $frame);
             }else{
                 $pushData = new \HearthStone\commands\NoticeLoginCommand();
             }

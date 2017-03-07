@@ -29,3 +29,7 @@ $container['redis'] = function($c){
 $container['server'] = function($c){
     return (new \HearthStone\services\ServerFactory())->create();
 };
+
+$container['clients'] = function($c){
+    return new ArrayObject();
+};

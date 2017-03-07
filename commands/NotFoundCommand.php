@@ -8,9 +8,10 @@ class NotFoundCommand extends BaseCommand
     protected $code = STATUS_NOT_FOUND_CMD;
     protected $msg = '';
 
-    public function handler($params)
+    public function handler($server, $frame)
     {
-        $this->msg = '没有找到' . (isset($params->cmd) ? ucfirst($params->cmd) : '') . 'Command';
+        $receivedData = json_decode($frame->data);
+        $this->msg = '没有找到' . (isset($receivedData->cmd) ? ucfirst($receivedData->cmd) : '') . 'Command';
         return $this;
     }
 }

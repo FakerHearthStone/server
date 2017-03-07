@@ -25,15 +25,23 @@ abstract class BaseCommand
     protected $msg = '';
     protected $data = [];
     
+    protected $container;
+    /**
+     * @var \ArrayObject
+     */
+    protected $clients;
+    
     public function __construct()
     {
-        $container = ContainerBuilder::getInstance();
+        $this->container = ContainerBuilder::getInstance();
+        $this->clients = $this->container['clients'];
     }
 
     /**
-     * @param $params object
+     * @param $server 
+     * @param $frame
      */
-    protected function handler($params)
+    protected function handler($server, $frame)
     {
         
     }
