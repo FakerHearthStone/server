@@ -3,11 +3,11 @@
 namespace HearthStone\services\server;
 
 use HearthStone\services\ContainerBuilder;
+use HearthStone\services\AccessControl;
 
 
 class TcpServer extends \Swoole\Server
 {
-    use ServerTrait;
 
     private $debugMode = false;
 
@@ -39,8 +39,8 @@ class TcpServer extends \Swoole\Server
             $this->debugMode && $this->logger->info('连接成功...');
         });
 
-        $this->on('receive', function ($serv, $fd, $from_id, $data) {
-            $serv->send($fd, $this->getPushData($data));
+        $this->on('receive', function (\Swoole\Server $serv, $fd, $from_id, $data) {
+            $serv->send($fd, $this->getSendData($serv, $fd, $from_id, $data));
             $serv->close($fd);
         });
         $this->on('close', function ($serv, $fd) {
@@ -48,5 +48,32 @@ class TcpServer extends \Swoole\Server
         });
 
         return $this;
+    }
+
+    /**
+     * 获取返回给客户端的字符串
+     *
+     * @param $receiveStr string
+     * @return $pushData
+     */
+    private function getSendData(\Swoole\Server $serv, $fd, $from_id, $data)
+    {
+        $receivedData = json_decode($data);
+
+        $this->debugMode && $this->logger->info('接收到数据 ' . $data);
+
+        if( ! isset($receivedData->cmd) ){
+            $pushData = new \HearthStone\commands\InvalidCommand();
+        }else{
+            if( AccessControl::checkLogin($receivedData) ){
+                $pushData = \HearthStone\commands\CommandFactory::create($receivedData->cmd)->handler($receivedData);
+            }else{
+                $pushData = new \HearthStone\commands\NoticeLoginCommand();
+            }
+        }
+
+        $this->debugMode && $this->logger->info('发送的数据 ' . $pushData);
+
+        return $pushData;
     }
 }
